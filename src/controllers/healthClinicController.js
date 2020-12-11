@@ -1,5 +1,6 @@
 const healthClinic = require('../models/HealthClinic.js');
 const mongoose = require('mongoose');
+const healthClinicSchema = require('../validators/healthClinics')
 
 const getAll = async (request, response) => {
 
@@ -37,18 +38,45 @@ const getByVaccineDose = async (request, response) => {
 }
 
 const registerHealthClinic = async (request, response) => {
-    const { type, address, borough, openingHours, vaccines } = request.body;
 
-    healthClinic.create({
-        type: type,
-        address: address,
-        borough: borough,
-        openingHours: openingHours,
-        vaccines: vaccines,
-    })
-        .then((newRegister) => { response.status(200).json({ message: `Nova unidade de Saúde registrada com sucesso`, newRegister }) })
-        .catch(err => { response.status(500).json({ message: `Infelizmente, o registro de uma nova unidade de Saúde não pode ser efetuada.`, err }) })
+    try {
+        const validatedRegister = await healthClinicSchema.validate(request.body)
+        healthClinic.create({
+            type: validatedRegister.type,
+            address: validatedRegister.address,
+            borough: validatedRegister.borough,
+            openingHours: validatedRegister.openingHours,
+            vaccines: validatedRegister.vaccines,
+        })
+            .then((newRegister) => { response.status(200).json({ message: `Nova unidade de Saúde registrada com sucesso`, newRegister }) })
+            .catch(err => { response.status(500).json({ message: `Infelizmente, o registro de uma nova unidade de Saúde não pode ser efetuada.`, err }) })
+    }
 
+    catch (err) { return response.status(500).json(err) }
+}
+
+const updateHealthClinic = async (request, response) => {
+    const { id } = request.params;
+    const { borough } = request.body;
+     const validatedRegister = await healthClinicSchema.validate(request.body)
+
+    if (!mongoose.Types.ObjectId.isValid(id)) { return response.status(400).json({ message: 'O ID inserido é inválido' }) }
+
+    healthClinic.findByIdAndUpdate(id, validatedRegister)
+        .then(() => { response.status(200).json({ message: `A unidade de Saúde selecionada ${request.params.id} foi atualizada com sucesso` }) })
+        .catch((err) => response.status(500).json(err))
+
+}
+
+const updateAddress = async (request, response) => {
+    const { id } = request.params;
+    const { address } = request.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) { return response.status(400).json({ message: 'O ID inserido é inválido' }) }
+
+    healthClinic.findByIdAndUpdate(id, { $set: { address: address } })
+        .then(() => { response.status(200).json({ message: `O endereço da unidade de Saúde selecionada ${request.params.id} foi atualizado com sucesso` }) })
+        .catch((err) => response.status(500).json({ message: `Não foi possível atualizar o cadastro da unidade de Saúde`, err }))
 }
 
 const deleteHealthClinic = (request, response) => {
@@ -67,6 +95,8 @@ module.exports = {
     getByVaccine,
     getByVaccineDose,
     registerHealthClinic,
+    updateHealthClinic,
+    updateAddress,    
     deleteHealthClinic
-    
+
 }

@@ -10,8 +10,8 @@ const boroughs = [
 ]
 
 const addressSchema = new Schema({
-    street: { type: String, required: [true, 'O preenchimento desse campo é obrigatório'] },
-    zipcode: { type: Number, min: 8, required: [true, 'O preenchimento desse campo é obrigatório'], unique: true },
+    street: String,
+    zipcode: { type: String, unique: true },
     _id: false
 })
 
@@ -21,7 +21,7 @@ const healthClinicSchema = new Schema({
     address: { type: addressSchema, unique: true, required: [true, 'O preenchimento desse campo é obrigatório'] },
     borough: { type: String, required: [true, 'O preenchimento desse campo é obrigatório'], enum: boroughs },
     openingHours: { type: String, required: [true, 'O preenchimento desse campo é obrigatório'], default: "Segunda a Sexta - 8h às 17h" },
-    vaccines: [{ type: Schema.Types.ObjectId, ref: 'Vaccine' }]
+    vaccines: [{ type: Schema.Types.ObjectId, ref: 'Vaccine', required: true }]
 }, { timestamps: true })
 
 

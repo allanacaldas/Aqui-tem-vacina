@@ -13,6 +13,10 @@ router.get('/vaccine-dose', healthClinicController.getByVaccineDose);
 
 router.post('/register', healthClinicController.registerHealthClinic);
 
+router.put('/update/:id', healthClinicController.updateHealthClinic);
+
+router.patch('/update-address/:id', healthClinicController.updateAddress);
+
 router.delete('/delete/:id', healthClinicController.deleteHealthClinic);
 
 
