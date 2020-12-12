@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 const healthClinicRoutes = require('./routes/healthClinicRoutes.js');
+const vaccinesRoutes = require('./routes/vaccineRoutes');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -32,5 +33,6 @@ app.use(function (request, response, next) {
 
 
 app.use('/health-clinics', healthClinicRoutes);
+app.use('/vaccines', vaccinesRoutes);
 
 module.exports = app;

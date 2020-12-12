@@ -17,6 +17,8 @@ router.put('/update/:id', healthClinicController.updateHealthClinic);
 
 router.patch('/update-address/:id', healthClinicController.updateAddress);
 
+router.patch('/insert-vaccines/:id', healthClinicController.updateVaccinesList);
+
 router.delete('/delete/:id', healthClinicController.deleteHealthClinic);
 
 

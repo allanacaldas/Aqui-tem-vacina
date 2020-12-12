@@ -26,5 +26,8 @@ const healthClinicSchema = new Schema({
 
 
 const healthClinic = mongoose.model('healthClinic', healthClinicSchema);
-module.exports = healthClinic;
+
+module.exports = healthClinic
+
+
 
